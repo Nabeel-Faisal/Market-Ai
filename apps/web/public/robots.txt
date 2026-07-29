@@ -1,0 +1,8 @@
+# Market Ai Switzerland
+User-agent: *
+Allow: /
+
+# Nothing here is worth crawling
+Disallow: /hcgi/
+
+Sitemap: https://marketai.ch/sitemap.xml

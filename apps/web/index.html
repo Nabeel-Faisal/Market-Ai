@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+		<title>Market Ai — AI-Powered Digital Agency in Switzerland</title>
+		<meta
+			name="description"
+			content="Swiss AI-powered digital agency. Web development, app development, digital marketing, SEO, branding and BI dashboards for businesses in Zurich, Geneva, Basel, Bern and beyond."
+		/>
+
+		<link rel="canonical" href="https://marketai.ch/" />
+		<meta name="generator" content="Market Ai Switzerland" />
+		<meta name="theme-color" content="#05070f" media="(prefers-color-scheme: dark)" />
+		<meta name="theme-color" content="#f7f9fc" media="(prefers-color-scheme: light)" />
+
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="apple-touch-icon" href="/favicon.svg" />
+		<link rel="manifest" href="/site.webmanifest" />
+
+		<!--
+			Fonts are self-hosted from /fonts (see src/fonts.css) — no third-party
+			font CDN, so no visitor IPs leave the site and first paint costs one
+			fewer DNS + TLS handshake. Only the two faces used above the fold are
+			preloaded; the rest arrive with the stylesheet.
+		-->
+		<link
+			rel="preload"
+			href="/fonts/clash-display-500.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link rel="preload" href="/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin />
+
+		<!--
+			Theme bootstrap — runs before first paint so the correct palette is
+			applied with no colour flash on load.
+		-->
+		<script>
+			(function () {
+				try {
+					var stored = localStorage.getItem('marketai-theme');
+					var theme =
+						stored === 'light' || stored === 'dark'
+							? stored
+							: window.matchMedia('(prefers-color-scheme: light)').matches
+								? 'light'
+								: 'dark';
+					var root = document.documentElement;
+					root.classList.add('theme-loading');
+					root.classList.toggle('dark', theme === 'dark');
+					root.style.colorScheme = theme;
+					window.requestAnimationFrame(function () {
+						window.requestAnimationFrame(function () {
+							root.classList.remove('theme-loading');
+						});
+					});
+				} catch (e) {
+					document.documentElement.classList.add('dark');
+				}
+			})();
+		</script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<noscript>
+			<div style="padding: 3rem; font-family: system-ui, sans-serif; text-align: center">
+				<h1>Market Ai — AI-Powered Digital Agency in Switzerland</h1>
+				<p>
+					This site needs JavaScript enabled. Reach us directly at
+					<a href="mailto:info@marketai.ch">info@marketai.ch</a> or +41 78 322 88 20.
+				</p>
+			</div>
+		</noscript>
+		<script type="module" src="/src/main.jsx"></script>
+	</body>
+</html>
