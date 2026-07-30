@@ -180,6 +180,12 @@
     color: hsl(var(--foreground));
     text-wrap: balance;
     letter-spacing: -0.03em;
+    /*
+      Clash Display draws a 0.171em word space against the ~0.25em most families
+      use, and the negative tracking above is subtracted from it again — without
+      this, words in headings run together. Tuned to land near a normal space.
+    */
+    word-spacing: 0.07em;
     line-height: 1.06;
   }
 
