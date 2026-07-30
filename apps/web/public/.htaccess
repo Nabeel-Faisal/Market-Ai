@@ -1,6 +1,14 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteBase /
+
+	# A build asset that is missing means the visitor is running an index.html
+	# from an older deploy. Answer 404 rather than falling through to the rule
+	# below: handing back index.html under a .js request makes the browser
+	# reject it on MIME type and leaves a blank page with no clear cause.
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(assets|fonts)/ - [L,R=404]
+
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^ index.html [L]

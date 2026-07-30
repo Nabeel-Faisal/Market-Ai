@@ -74,6 +74,56 @@
 				</p>
 			</div>
 		</noscript>
+		<!--
+			Stale-document recovery. This file names hashed asset files, so a copy
+			served from a cache after a deploy points at bundles that no longer
+			exist — the module fails to load and the page stays blank with nothing
+			in the console to explain it. Catch that failure and re-request the
+			document past any cache, once per tab so a genuine outage cannot turn
+			into a reload loop.
+		-->
+		<script>
+			(function () {
+				var KEY = 'marketai-stale-reload';
+				window.addEventListener(
+					'error',
+					function (event) {
+						var el = event.target;
+						if (!el || el.tagName !== 'SCRIPT' || !el.src) return;
+						if (sessionStorage.getItem(KEY)) return;
+						try {
+							sessionStorage.setItem(KEY, '1');
+						} catch (e) {
+							return;
+						}
+						var url = new URL(window.location.href);
+						url.searchParams.set('_rev', Date.now().toString(36));
+						window.location.replace(url.toString());
+					},
+					true
+				);
+				window.addEventListener('load', function () {
+					// React mounts after load fires, so give it a moment before
+					// deciding the boot succeeded. Clearing the guard lets a stale
+					// document from some future deploy recover the same way; the
+					// cache-busting parameter is dropped so it stays out of shared
+					// links and analytics.
+					window.setTimeout(function () {
+						if (!document.getElementById('root').children.length) return;
+						try {
+							sessionStorage.removeItem(KEY);
+						} catch (e) {
+							/* ignore */
+						}
+						var url = new URL(window.location.href);
+						if (url.searchParams.has('_rev')) {
+							url.searchParams.delete('_rev');
+							window.history.replaceState(null, '', url.toString());
+						}
+					}, 2000);
+				});
+			})();
+		</script>
 		<script type="module" src="/src/main.jsx"></script>
 	</body>
 </html>
