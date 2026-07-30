@@ -12,31 +12,38 @@ import { Toaster } from '@/components/ui/sonner';
 import { PageFallback } from './components/LoadingSkeletons.jsx';
 import { pageVariants } from './lib/motion.js';
 
+/*
+  Only the landing page is eager. Every other route is split out, so a visitor
+  downloads the page they asked for instead of all twenty — the difference is
+  most of the initial bundle, and it is felt hardest on mobile connections.
+  The <Suspense fallback> below covers the swap.
+*/
 import HomePage from './pages/HomePage.jsx';
-import ServicesPage from './pages/ServicesPage.jsx';
-import AboutPage from './pages/AboutPage.jsx';
-import ContactPage from './pages/ContactPage.jsx';
-import NotFoundPage from './pages/NotFoundPage.jsx';
+
+const ServicesPage = lazy(() => import('./pages/ServicesPage.jsx'));
+const AboutPage = lazy(() => import('./pages/AboutPage.jsx'));
+const ContactPage = lazy(() => import('./pages/ContactPage.jsx'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.jsx'));
 
 // Service pages
-import WebDevelopmentPage from './pages/WebDevelopmentPage.jsx';
-import AppDevelopmentPage from './pages/AppDevelopmentPage.jsx';
-import DigitalMarketingPage from './pages/DigitalMarketingPage.jsx';
-import SEOAgencyPage from './pages/SEOAgencyPage.jsx';
-import BrandDevelopmentPage from './pages/BrandDevelopmentPage.jsx';
-import BusinessIntelligencePage from './pages/BusinessIntelligencePage.jsx';
+const WebDevelopmentPage = lazy(() => import('./pages/WebDevelopmentPage.jsx'));
+const AppDevelopmentPage = lazy(() => import('./pages/AppDevelopmentPage.jsx'));
+const DigitalMarketingPage = lazy(() => import('./pages/DigitalMarketingPage.jsx'));
+const SEOAgencyPage = lazy(() => import('./pages/SEOAgencyPage.jsx'));
+const BrandDevelopmentPage = lazy(() => import('./pages/BrandDevelopmentPage.jsx'));
+const BusinessIntelligencePage = lazy(() => import('./pages/BusinessIntelligencePage.jsx'));
 
-import BlogListingPage from './pages/BlogListingPage.jsx';
-import LocalServicePage from './pages/LocalServicePage.jsx';
-import FAQ from './pages/FAQ.jsx';
+const BlogListingPage = lazy(() => import('./pages/BlogListingPage.jsx'));
+const LocalServicePage = lazy(() => import('./pages/LocalServicePage.jsx'));
+const FAQ = lazy(() => import('./pages/FAQ.jsx'));
 
 // Legal pages
-import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
-import TermsConditions from './pages/TermsConditions.jsx';
-import CookiePolicy from './pages/CookiePolicy.jsx';
-import Impressum from './pages/Impressum.jsx';
-import Disclaimer from './pages/Disclaimer.jsx';
-import RefundPolicy from './pages/RefundPolicy.jsx';
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.jsx'));
+const TermsConditions = lazy(() => import('./pages/TermsConditions.jsx'));
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy.jsx'));
+const Impressum = lazy(() => import('./pages/Impressum.jsx'));
+const Disclaimer = lazy(() => import('./pages/Disclaimer.jsx'));
+const RefundPolicy = lazy(() => import('./pages/RefundPolicy.jsx'));
 
 // Heavier routes are split out of the initial bundle
 const AnalyzerPage = lazy(() => import('./pages/AnalyzerPage.jsx'));

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -9,6 +9,11 @@ import { cn } from '@/lib/utils';
  * viewport, the loop pauses when the section scrolls out of view or the tab is
  * hidden, and it renders nothing at all when the visitor prefers reduced
  * motion.
+ *
+ * It is also held off small and touch screens, matching HeroDepthLayer. The
+ * link pass is O(n²) with a separate stroke() per link every frame, which a
+ * phone pays for in dropped frames — and the effect is pointer-reactive, so on
+ * a touch device it buys nothing to begin with.
  */
 const ParticleField = ({
   className,
@@ -24,6 +29,15 @@ const ParticleField = ({
   const pointerRef = useRef({ x: -9999, y: -9999 });
   const runningRef = useRef(true);
   const reduced = useReducedMotion();
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)');
+    const sync = () => setAllowed(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
 
   const readAccent = useCallback(() => {
     const styles = getComputedStyle(document.documentElement);
@@ -35,7 +49,7 @@ const ParticleField = ({
   }, []);
 
   useEffect(() => {
-    if (reduced) return undefined;
+    if (reduced || !allowed) return undefined;
 
     const canvas = canvasRef.current;
     if (!canvas) return undefined;
@@ -190,9 +204,9 @@ const ParticleField = ({
       window.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [density, interactive, linkDistance, readAccent, reduced, repelRadius, repelStrength]);
+  }, [allowed, density, interactive, linkDistance, readAccent, reduced, repelRadius, repelStrength]);
 
-  if (reduced) return null;
+  if (reduced || !allowed) return null;
 
   return (
     <canvas
